@@ -35,10 +35,10 @@ class Tag extends ActiveRecord
     
 }
 
-//var_dump(User::find(1)->posts);
+var_dump(User::find(1)->posts);
 
 // membuat data baru
-/*
+
 $user = new User();
 $user->name = 'Ata';
 $user->email = 'ata@javan.co.id';
@@ -48,12 +48,12 @@ $user->save();
 $user = User::find(2);// mengambil data dengan id =2
 $user->name = 'Seseorang Lagi';
 $user->save();// menyimpanya kembali
-*/
+
 // Mengambil data dengan relasi
 
-$user = User::first();
+$users = User::all(array('limit'=>2));
  
-//foreach($users as $user){
+foreach($users as $user){
     echo 'nama: '. $user->name ."<br/>\n";
     echo 'email: '. $user->name ."<br/>\n";
     echo 'posts: <br/>';
@@ -65,5 +65,5 @@ $user = User::first();
         }
     }
  
-//}
+}
 
