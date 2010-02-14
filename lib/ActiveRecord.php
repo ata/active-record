@@ -73,6 +73,32 @@ abstract class ActiveRecord
         
     }
     
+    protected static function unsetRelationProperties($object)
+    {
+        $class = get_class($object);
+        if (isset(static::$belongsTo)){
+            foreach (array_keys(static::$belongsTo) as $property) {
+                if (property_exists($object,$property)){
+                    unset($object->$property);
+                }
+            }
+        }
+        if (isset(static::$hasOne)){
+            foreach (array_keys(static::$hasOne) as $property) {
+                if (property_exists($object,$property)) {
+                    unset($object->$property);
+                }
+            }
+        }
+        if (isset(static::$hasMany)){
+            foreach (array_keys(static::$hasMany) as $property) {
+                if(property_exists($object,$property)){
+                    unset($object->$property);
+                }
+            }
+        }
+        
+    }
 
     public function __get($property) 
     {
@@ -179,7 +205,9 @@ abstract class ActiveRecord
         $class = get_called_class();
         try {
             $statement = self::$db->prepare($query);
-            $statement->setFetchMode(\PDO::FETCH_CLASS,$class);
+            $object = new $class();
+            static::unsetRelationProperties($object);
+            $statement->setFetchMode(\PDO::FETCH_INTO,$object);
             $statement->execute($params);
             return self::$statement[$class] = $statement;
         } catch (PDOStatement $e) {
@@ -195,7 +223,7 @@ abstract class ActiveRecord
      *      'order' => ''
      *  );
      */
-    public static function all($options = array())
+    protected function findAll($options = array())
     {
         $select = 'SELECT *';
         $limit = '';
@@ -229,17 +257,27 @@ abstract class ActiveRecord
         
         $table = static::getTable();
         
-        $statement = static::query("$select from $table $where $order $limit $offset");
-        return $statement->fetchAll();
-
+        return  static::query("$select from $table $where $order $limit $offset");
         
     }
     
+    
+    public static function all($options = array())
+    {
+        return static::findAll($options)->fetchAll();
+    }
+    
+    public static function first($options = array()){
+        $options['limit'] = '1';
+        return static::findAll($options)->fetch();
+    }
     /**
      * find(1) --> return single object with id = 1
      * find(1,2) --> return array of object with id = 1 and 2
      * find('name','Ata') --> return array objek with field 'name' is 'Ata'
      */ 
+    
+    
     public static function find()
     {
         $class = get_called_class();
@@ -371,6 +409,4 @@ abstract class ActiveRecord
         }
         return false;
     }
-
-    
 }

@@ -21,6 +21,7 @@ class Post extends ActiveRecord
 
 class User extends ActiveRecord
 {
+    public $posts;
     static $hasMany = array(
         'posts' => array('class'=>'Post')
     );
@@ -34,10 +35,12 @@ class Tag extends ActiveRecord
     
 }
 
-// membuat data baru
+//var_dump(User::find(1)->posts);
 
+// membuat data baru
+/*
 $user = new User();
-$user->nama = 'Ata';
+$user->name = 'Ata';
 $user->email = 'ata@javan.co.id';
 $user->save();
 
@@ -45,13 +48,12 @@ $user->save();
 $user = User::find(2);// mengambil data dengan id =2
 $user->name = 'Seseorang Lagi';
 $user->save();// menyimpanya kembali
-
-
+*/
 // Mengambil data dengan relasi
 
-$users = User::all(array('limit'=>2));
+$user = User::first();
  
-foreach($users as $user){
+//foreach($users as $user){
     echo 'nama: '. $user->name ."<br/>\n";
     echo 'email: '. $user->name ."<br/>\n";
     echo 'posts: <br/>';
@@ -63,5 +65,5 @@ foreach($users as $user){
         }
     }
  
-}
+//}
 
