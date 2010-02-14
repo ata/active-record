@@ -36,14 +36,32 @@ class Tag extends ActiveRecord
 
 // membuat data baru
 
+$user = new User();
+$user->nama = 'Ata';
+$user->email = 'ata@javan.co.id';
+$user->save();
+
+// memperbaharui data
+$user = User::find(2);// mengambil data dengan id =2
+$user->name = 'Seseorang Lagi';
+$user->save();// menyimpanya kembali
+
+
 // Mengambil data dengan relasi
 
-$posts = Post::all(array('limit' => 5));
-$posts[0]->user;
-$posts[0]->tags;
-var_dump($posts[0]);
-
-$users = User::all(array('limit' => 5));
-$users[0]->posts;
-var_dump($users[0]);
+$users = User::all(array('limit'=>2));
+ 
+foreach($users as $user){
+    echo 'nama: '. $user->name ."<br/>\n";
+    echo 'email: '. $user->name ."<br/>\n";
+    echo 'posts: <br/>';
+    foreach($user->posts as $post){//relasi 'hasMany'
+        echo '  title'   . $post->title . "<br/>\n";
+        echo '  content'   . $post->content . "<br/>\n";
+        foreach($post->tags as $tag) {
+            echo '        tag: '.$tag->name . "<br/>\n";
+        }
+    }
+ 
+}
 
