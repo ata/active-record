@@ -1,6 +1,6 @@
-SAMPLE CODE:
+h1. SAMPLE CODE:
 
-<code>
+<pre>
 <?php
 
 require '../lib/ActiveRecord.php';
@@ -71,4 +71,4 @@ foreach($users as $user){
 }
 
 
-</code>
+</pre>
